@@ -20,21 +20,19 @@ import config from "@/src/helpers/config";
 import Music from "./music";
 import { FontAwesome } from "@expo/vector-icons";
 import AudioPlayer from "react-native-youtube-iframe";
+import { useSelector, useDispatch } from "react-redux";
+import { addMessages } from "../redux/reducers/messages";
 
 const index = () => {
-  const [messages, setMessages] = useState([
-    {
-      name: "admin",
-      message:
-        "welcome to Chatty (a complete Encrypted Chat). \nwe don't store your any data so offline message is not possible.",
-    },
-  ]);
   const socketUrl = config.server_url;
   const socket = io(socketUrl, {
     reconnection: true,
     rememberUpgrade: true,
     autoConnect: true,
   });
+  const dispatch = useDispatch();
+  const message = useSelector((state) => state.messages);
+
   const [currentInput, setCurrentInput] = useState("");
   const [roomId, setRoomId] = useState("");
   const [name, setName] = useState("user");
@@ -53,7 +51,7 @@ const index = () => {
   // message update area
   socket.on("message", (data) => {
     if (data.type === "message") {
-      setMessages((previousMessage) => [...previousMessage, data]);
+      dispatch(addMessages(data));
     }
   });
 
@@ -107,7 +105,7 @@ const index = () => {
     if (flatListRef.current) {
       flatListRef.current.scrollToEnd({ animated: true });
     }
-  }, [messages]);
+  }, [message]);
 
   useEffect(() => {
     if (currentInput === "") return;
@@ -221,7 +219,7 @@ const index = () => {
             <View style={[applications.Theme.from_bottom]}>
               <FlatList
                 ref={flatListRef}
-                data={messages}
+                data={message}
                 renderItem={({ item }) => (
                   <View style={{ marginVertical: 3 }}>
                     <Text style={{ color: "#6EC207" }}>

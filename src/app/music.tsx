@@ -10,34 +10,38 @@ import {
 import React, { useEffect, useState } from "react";
 import youtubeUtils from "../helpers/youtube";
 import { FontAwesome } from "@expo/vector-icons";
+import { useSelector, useDispatch } from "react-redux";
+import { updateList } from "../redux/reducers/playlist";
+import { updateShowPlayer } from "../redux/reducers/appState";
+import { Playlist, State } from "../constants/interfaces";
 
-const Music = ({
-  modelStates,
-  songsList,
-  trackIdState,
-  playingState,
-  toggleState,
-}) => {
+const Music = ({ modelStates, trackIdState, playingState, toggleState }) => {
+  const dispatch = useDispatch();
+  const play_list = useSelector((state: State) => state.play_list);
+  const appState = useSelector((state: State) => state.chatty_app_state);
+  const playerState = useSelector((state: State) => state.player);
+
   const [modelShow, setModelShow] = modelStates;
-  const [songs, setSongs] = songsList;
   const [trackId, setTrackId] = trackIdState;
-  const [input, setInput] = useState("hai");
+  const [input, setInput] = useState("");
   const [playing, setPlaying] = playingState;
   const [toggle, setToggle] = toggleState;
   useEffect(() => {
-    youtubeUtils
-      .search_song("kangal neeyeh")
-      .then((data) => setSongs(data.data));
+    youtubeUtils.search_song("kangal neeyeh").then((data) => {
+      dispatch(updateList(data.data));
+    });
   }, []);
 
   const handleSubmit = () => {
-    youtubeUtils.search_song(input).then((data) => setSongs(data.data));
+    youtubeUtils
+      .search_song(input)
+      .then((data) => dispatch(updateList(data.data)));
   };
   return (
     <View>
       <Modal
         animationType="slide"
-        visible={modelShow}
+        visible={appState?.show_player}
         hardwareAccelerated={true}
         transparent={true}
       >
@@ -50,12 +54,7 @@ const Music = ({
           }}
         >
           <Image
-            src={
-              trackId !== ""
-                ? songs.find((song: Object) => song.id == trackId)?.thumbnail
-                    ?.url
-                : "https://cdn.dribbble.com/users/3547568/screenshots/14395014/music_jpeg_4x.jpg"
-            }
+            src={playerState.current_song_details.image}
             style={{
               height: 150,
               width: 150,
@@ -64,13 +63,16 @@ const Music = ({
               margin: 10,
             }}
           />
+          <Text style={{ color: "#fff", fontSize: 15, marginBottom: 5 }}>
+            {playerState.current_song_details.track_name}
+          </Text>
           <Pressable
             onPress={() => {
               setPlaying(!playing), setToggle(true);
             }}
           >
             <FontAwesome
-              name={playing ? "pause" : "play"}
+              name={playerState.is_playing ? "pause" : "play"}
               size={25}
               color={"#FFF"}
             />
@@ -80,7 +82,7 @@ const Music = ({
           onChangeText={setInput}
           placeholder="search song..."
           placeholderTextColor={"#6EC207"}
-          style={{ color: "#6EC207", fontSize: 25 }}
+          style={{ color: "#6EC207", fontSize: 25, backgroundColor: "#000" }}
           keyboardType={"default"}
           returnKeyLabel={"search"}
           autoCapitalize={"none"}
@@ -98,7 +100,7 @@ const Music = ({
         >
           <FlatList
             style={{ height: "70%" }}
-            data={songs}
+            data={play_list}
             renderItem={({ item }) => (
               <Pressable
                 onPress={() => setTrackId(item.id)}
@@ -119,7 +121,7 @@ const Music = ({
         </View>
         <Pressable
           onPress={() => {
-            setModelShow(false);
+            dispatch(updateShowPlayer());
           }}
           style={{
             position: "absolute",
