@@ -12,14 +12,18 @@ const chattyAppState = createSlice({
   name: "chatty_app",
   initialState: initialState,
   reducers: {
-    update_user_name: (state, action) => {
+    updateUserName: (state, action) => {
       state.user_name = action.payload;
     },
     updateShowPlayer: (state) => {
       state.show_player = !state.show_player;
     },
+    updateRoomId: (state, action) => {
+      state.room_id = action.payload;
+    },
   },
 });
 
-export const { update_user_name, updateShowPlayer } = chattyAppState.actions;
+export const { updateUserName, updateShowPlayer, updateRoomId } =
+  chattyAppState.actions;
 export default chattyAppState.reducer;

@@ -22,19 +22,21 @@ import { FontAwesome } from "@expo/vector-icons";
 import AudioPlayer from "react-native-youtube-iframe";
 import { useSelector, useDispatch } from "react-redux";
 import { addMessages } from "../redux/reducers/messages";
+import { connectSocket, disconnectSocket } from "../redux/reducers/socket";
 import { State } from "../constants/interfaces";
 
 const index = () => {
   const socketUrl = config.server_url;
+  const dispatch = useDispatch();
+  const message = useSelector((state: State) => state.messages);
+  const AppState = useSelector((state: State) => state.chatty_app_state);
+  const socketState = useSelector((state: State) => state.socket);
+
   const socket = io(socketUrl, {
     reconnection: true,
     rememberUpgrade: true,
     autoConnect: true,
   });
-  const dispatch = useDispatch();
-  const message = useSelector((state: State) => state.messages);
-  const AppState = useSelector((state: State) => state.chatty_app_state);
-
   const [currentInput, setCurrentInput] = useState("");
   const [roomId, setRoomId] = useState("");
   const [name, setName] = useState("user");

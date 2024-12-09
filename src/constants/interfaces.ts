@@ -3,6 +3,7 @@ export interface State {
   chatty_app_state: AppState;
   messages: object[];
   player: Player;
+  socket: any;
 }
 
 interface AppState {

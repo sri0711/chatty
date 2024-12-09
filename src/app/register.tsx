@@ -7,20 +7,46 @@ import {
   SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
-import config from "../helpers/config";
 import registerStyle from "./styles/registerStyle";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { State } from "../constants/interfaces";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { updateRoomId, updateUserName } from "../redux/reducers/appState";
+import Utils from "../helpers/Utils";
 
 const register = () => {
+  const dispatch = useDispatch();
   const appState = useSelector((state: State) => state.chatty_app_state);
-  const [name, setName] = useState(appState.user_name);
-  const [roomId, setRoomId] = useState(appState.room_id);
+  const { socket } = useSelector((state: State) => state.socket);
+
+  const [name, setName] = useState(appState.user_name || "");
+  const [roomId, setRoomId] = useState(appState.room_id || "");
   const [haveRoomIds, setHaveRoomIds] = useState(false);
+  const getRoomId = () => {
+    socket.emit("news", {
+      type: "register",
+    });
+  };
+  socket.on("news", (data: { room_id: string }) => {
+    setRoomId(appState.room_id);
+  });
+
+  const mingle = () => {
+    if (!name || name?.length < 3) {
+      return Utils.showToast("please provide a name");
+    }
+    if (!roomId || roomId?.length < 3) {
+      return Utils.showToast("please provide a Love Id");
+    }
+    dispatch(updateUserName(name));
+    dispatch(updateRoomId(roomId));
+    SecureStore.setItem("room_id", roomId);
+    SecureStore.setItem("name", name);
+    router.replace("/");
+  };
+
   return (
     <SafeAreaView style={registerStyle.root}>
       <View style={registerStyle.body}>
@@ -59,15 +85,26 @@ const register = () => {
           <></>
         )}
         {haveRoomIds ? (
-          <Pressable onPress={() => router.push("/register")}>
+          <Pressable onPress={mingle}>
             <Text style={registerStyle.button}>Mingle</Text>
           </Pressable>
         ) : roomId ? (
-          <Pressable onPress={() => router.push("/register")}>
-            <Text style={registerStyle.button}>Mingle</Text>
-          </Pressable>
+          <>
+            <Text style={registerStyle.TextInputTitle}>
+              Love Id{"         "}:{" "}
+              <TextInput
+                style={registerStyle.TextField}
+                value={roomId}
+                onChangeText={setRoomId}
+                keyboardType="default"
+              ></TextInput>
+            </Text>
+            <Pressable onPress={mingle}>
+              <Text style={registerStyle.button}>Mingle</Text>
+            </Pressable>
+          </>
         ) : (
-          <Pressable onPress={() => router.push("/register")}>
+          <Pressable onPress={getRoomId}>
             <Text style={[registerStyle.button, { width: 200 }]}>
               Get Love Id
             </Text>
