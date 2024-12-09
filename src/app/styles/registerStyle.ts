@@ -12,12 +12,6 @@ export default StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#000",
   },
-  icon: {
-    height: 200,
-    width: 200,
-    borderRadius: 25,
-    color: "#fff",
-  },
   title: {
     color: "#6EC207",
     marginTop: 40,
@@ -25,19 +19,37 @@ export default StyleSheet.create({
     fontSize: 50,
     fontWeight: 600,
   },
-  versionText: {
-    color: "#A6AEBF",
-    marginBottom: 20,
-  },
-  bottomText: {
+  slogan: {
     color: "#fff",
     fontSize: 20,
+    marginBottom: 80,
+  },
+  haveLoveId: {
+    color: "#fff",
+    fontSize: 20,
+    margin: 30,
+  },
+  TextInputTitle: {
+    color: "#fff",
+    fontSize: 20,
+    height: 35,
+    paddingBottom: 5,
+    margin: 10,
+  },
+  TextField: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 20,
+    width: 200,
+    height: 35,
+    borderWidth: 1,
+    borderColor: "#fff",
   },
   button: {
     backgroundColor: "#6EC207",
     margin: 30,
     height: 40,
-    width: 100,
+    width: 120,
     fontSize: 30,
     textAlign: "center",
     borderRadius: 10,

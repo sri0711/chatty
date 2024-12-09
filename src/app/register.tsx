@@ -1,211 +1,80 @@
-import { View, Text, Pressable, Share, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Share,
+  TextInput,
+  SafeAreaView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-import applications from "../constants/applications";
-import CheckBox from "expo-checkbox";
 import { io } from "socket.io-client";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import config from "../helpers/config";
+import registerStyle from "./styles/registerStyle";
+import { useSelector } from "react-redux";
+import { State } from "../constants/interfaces";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 const register = () => {
-  const [loginType, setLoginType] = useState(true);
-  const [roomId, setRoomId] = useState(SecureStore.getItem("room_id") || "");
-  const [roomIdGenerated, setRoomIdGenerated] = useState(false);
-  const [name, setName] = useState(SecureStore.getItem("name") || "user");
-  const socket = io(config.server_url, {
-    reconnection: true,
-  });
-  useEffect(() => {
-    socket.connect();
-    try {
-      socket.on("connect", () => {});
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-  socket.on("news", (data) => {
-    if (data.room_id != null) {
-      setRoomId(data.room_id);
-      setRoomIdGenerated(true);
-    }
-  });
-
-  const GetRoomId = () => {
-    socket.emit("news", {
-      type: "register",
-    });
-  };
-  const shareRoomId = async () => {
-    await Share.share({
-      message: `you partner is waiting on chat for this room id: \n\n\n\n\n\n\n\n ${roomId}`,
-    });
-  };
-
-  const getStarted = async () => {
-    SecureStore.setItem("room_id", roomId);
-    SecureStore.setItem("name", name);
-    router.replace("/");
-    socket.disconnect();
-  };
-
+  const appState = useSelector((state: State) => state.chatty_app_state);
+  const [name, setName] = useState(appState.user_name);
+  const [roomId, setRoomId] = useState(appState.room_id);
+  const [haveRoomIds, setHaveRoomIds] = useState(false);
   return (
-    <View style={[applications.Theme.body, applications.Theme.center]}>
-      <Text
-        style={[
-          applications.Theme.title_font,
-          applications.Theme.app_info_title,
-          applications.Theme.text_align_center,
-        ]}
-      >
-        Register
-      </Text>
-      <View style={{ marginTop: 70 }}>
-        <Text style={[applications.Theme.title_font, { margin: 20 }]}>
-          Please enter your name for identification
-        </Text>
-        <TextInput
-          style={{
-            fontWeight: 900,
-            color: "#fff",
-            borderColor: "#fff",
-            borderWidth: 1,
-            marginHorizontal: 30,
-          }}
-          value={name}
-          keyboardType="default"
-          onChangeText={setName}
-        ></TextInput>
-      </View>
-      <View style={[applications.Theme.inline_center, { marginTop: 80 }]}>
-        {roomIdGenerated ? (
-          <></>
-        ) : (
-          <>
-            <CheckBox
-              style={[
-                loginType && { backgroundColor: "#6EC207" },
-                {
-                  marginHorizontal: 10,
-                  marginLeft: 40,
-                },
-              ]}
-              value={loginType}
-              onValueChange={setLoginType}
+    <SafeAreaView style={registerStyle.root}>
+      <View style={registerStyle.body}>
+        <Text style={registerStyle.title}>Register</Text>
+        <Text style={registerStyle.slogan}>❤️ Fill Your Love Form ❤️</Text>
+        <Pressable onPress={() => setHaveRoomIds(!haveRoomIds)}>
+          <Text style={registerStyle.haveLoveId}>
+            Do you have Love ID{" "}
+            <FontAwesome
+              name={haveRoomIds ? "heart" : "heart-o"}
+              color={"red"}
+              size={25}
             />
-            <Text style={applications.Theme.title_font}>have a partner</Text>
-          </>
-        )}
-      </View>
-      <View>
-        {loginType ? (
-          <>
-            <View style={{ margin: 10, padding: 10 }}>
-              <TextInput
-                style={{
-                  fontWeight: 900,
-                  color: "#fff",
-                  borderColor: "#fff",
-                  borderWidth: 1,
-                }}
-                value={roomId}
-                keyboardType="default"
-                onChangeText={setRoomId}
-              ></TextInput>
-            </View>
-            <View>
-              <Pressable onPress={getStarted}>
-                <Text
-                  style={[
-                    applications.Theme.margin,
-                    applications.Theme.title_font,
-                    applications.Theme.text_align_center,
-                    {
-                      backgroundColor: "#6EC207",
-                      marginHorizontal: 70,
-                      paddingVertical: 10,
-                    },
-                  ]}
-                >
-                  Get Started
-                </Text>
-              </Pressable>
-            </View>
-          </>
+          </Text>
+        </Pressable>
+        <Text style={registerStyle.TextInputTitle}>
+          Lover’s Call :{" "}
+          <TextInput
+            style={registerStyle.TextField}
+            value={name}
+            onChangeText={setName}
+            keyboardType="default"
+          ></TextInput>
+        </Text>
+        {haveRoomIds ? (
+          <Text style={registerStyle.TextInputTitle}>
+            Love Id{"         "}:{" "}
+            <TextInput
+              style={registerStyle.TextField}
+              value={roomId}
+              onChangeText={setRoomId}
+              keyboardType="default"
+            ></TextInput>
+          </Text>
         ) : (
-          <>
-            {roomIdGenerated ? (
-              <>
-                <Pressable onPress={shareRoomId}>
-                  <Text
-                    style={[
-                      applications.Theme.title_font,
-                      { margin: 10, marginHorizontal: 30, marginTop: 30 },
-                    ]}
-                  >
-                    {roomId}
-                  </Text>
-                  <Text
-                    style={[
-                      applications.Theme.font_color_gray,
-                      { marginHorizontal: 30 },
-                    ]}
-                  >
-                    tap to share
-                  </Text>
-                </Pressable>
-                <View>
-                  <Pressable onPress={getStarted}>
-                    <Text
-                      style={[
-                        applications.Theme.margin,
-                        applications.Theme.title_font,
-                        applications.Theme.text_align_center,
-                        {
-                          backgroundColor: "#6EC207",
-                          marginHorizontal: 70,
-                          paddingVertical: 10,
-                        },
-                      ]}
-                    >
-                      Get Started
-                    </Text>
-                  </Pressable>
-                </View>
-              </>
-            ) : (
-              <>
-                <Text
-                  style={[
-                    applications.Theme.title_font,
-                    { margin: 10, marginHorizontal: 30 },
-                  ]}
-                >
-                  click to get a unique id
-                </Text>
-                <View>
-                  <Pressable onPress={GetRoomId}>
-                    <Text
-                      style={[
-                        applications.Theme.margin,
-                        applications.Theme.title_font,
-                        applications.Theme.text_align_center,
-                        {
-                          backgroundColor: "#6EC207",
-                          marginHorizontal: 70,
-                          paddingVertical: 10,
-                        },
-                      ]}
-                    >
-                      Contact Server
-                    </Text>
-                  </Pressable>
-                </View>
-              </>
-            )}
-          </>
+          <></>
+        )}
+        {haveRoomIds ? (
+          <Pressable onPress={() => router.push("/register")}>
+            <Text style={registerStyle.button}>Mingle</Text>
+          </Pressable>
+        ) : roomId ? (
+          <Pressable onPress={() => router.push("/register")}>
+            <Text style={registerStyle.button}>Mingle</Text>
+          </Pressable>
+        ) : (
+          <Pressable onPress={() => router.push("/register")}>
+            <Text style={[registerStyle.button, { width: 200 }]}>
+              Get Love Id
+            </Text>
+          </Pressable>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
