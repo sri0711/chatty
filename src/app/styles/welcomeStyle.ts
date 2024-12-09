@@ -17,13 +17,17 @@ export default StyleSheet.create({
     width: 200,
     borderRadius: 25,
     color: "#fff",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
   title: {
     color: "#6EC207",
-    margin: 50,
+    marginTop: 40,
+    margin: 30,
     fontSize: 50,
     fontWeight: 600,
+  },
+  versionText: {
+    color: "#A6AEBF",
+    marginBottom: 20,
   },
   bottomText: {
     color: "#fff",
@@ -32,11 +36,11 @@ export default StyleSheet.create({
   button: {
     backgroundColor: "#6EC207",
     margin: 30,
-    height: 50,
+    height: 40,
     width: 100,
-    fontSize: 35,
-    padding: 5,
+    fontSize: 30,
     textAlign: "center",
     borderRadius: 10,
+    fontWeight: 500,
   },
 });

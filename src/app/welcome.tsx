@@ -3,6 +3,7 @@ import React from "react";
 import { router } from "expo-router";
 import welcomeStyle from "./styles/welcomeStyle";
 const appIcon = require("../assets/images/icon.png");
+import { expo as AppDetails } from "../../app.json";
 
 const welcome = () => {
   return (
@@ -10,6 +11,9 @@ const welcome = () => {
       <View style={welcomeStyle.body}>
         <Image source={appIcon} alt="image" style={welcomeStyle.icon} />
         <Text style={welcomeStyle.title}>Chatty</Text>
+        <Text style={welcomeStyle.versionText}>
+          Version:{AppDetails.version}
+        </Text>
         <Text style={welcomeStyle.bottomText}>
           Share Thoughts To Your Partner
         </Text>
