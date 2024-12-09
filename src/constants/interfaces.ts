@@ -9,6 +9,7 @@ interface AppState {
   user_name: string;
   room_id: string;
   show_player: boolean;
+  song_search: string;
 }
 
 export interface Playlist {

@@ -22,6 +22,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import AudioPlayer from "react-native-youtube-iframe";
 import { useSelector, useDispatch } from "react-redux";
 import { addMessages } from "../redux/reducers/messages";
+import { State } from "../constants/interfaces";
 
 const index = () => {
   const socketUrl = config.server_url;
@@ -31,7 +32,8 @@ const index = () => {
     autoConnect: true,
   });
   const dispatch = useDispatch();
-  const message = useSelector((state) => state.messages);
+  const message = useSelector((state: State) => state.messages);
+  const AppState = useSelector((state: State) => state.chatty_app_state);
 
   const [currentInput, setCurrentInput] = useState("");
   const [roomId, setRoomId] = useState("");
@@ -72,8 +74,8 @@ const index = () => {
   // check room id for server
   useEffect(() => {
     const checkRoomId = () => {
-      let room_id = SecureStore.getItem("room_id");
-      let name_input = SecureStore.getItem("name");
+      let room_id = AppState.room_id;
+      let name_input = AppState.user_name;
       if (!room_id) {
         const timer = setTimeout(() => {
           router.replace("/welcome"); // Use `push` instead of `navigate` for route transition

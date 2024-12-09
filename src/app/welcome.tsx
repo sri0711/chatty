@@ -1,48 +1,24 @@
-import { View, Text, StatusBar } from "react-native";
-import React, { useEffect } from "react";
-import applications from "../constants/applications";
-import { Link } from "expo-router";
+import { Image, Pressable, SafeAreaView, Text, View } from "react-native";
+import React from "react";
+import { router } from "expo-router";
+import welcomeStyle from "./styles/welcomeStyle";
+const appIcon = require("../assets/images/icon.png");
 
 const welcome = () => {
   return (
-    <>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={applications.Theme.body.backgroundColor}
-      />
-      <View style={applications.Theme.body}>
-        <View style={[applications.Theme.center]}>
-          <Text
-            style={[
-              applications.Theme.title_font,
-              applications.Theme.text_align_center,
-              applications.Theme.app_info_title,
-            ]}
-          >
-            Chatty
-          </Text>
-          <Text
-            style={[
-              applications.Theme.title_font,
-              applications.Theme.text_align_center,
-              applications.Theme.font_color_gray,
-            ]}
-          >
-            Personal One to One vibe with message
-          </Text>
-          <Link href={"/register"} style={{ margin: 80, marginTop: 180 }}>
-            <Text
-              style={[
-                applications.Theme.title_font,
-                applications.Theme.text_align_center,
-              ]}
-            >
-              Start
-            </Text>
-          </Link>
-        </View>
+    <SafeAreaView style={welcomeStyle.root}>
+      <View style={welcomeStyle.body}>
+        <Image source={appIcon} alt="image" style={welcomeStyle.icon} />
+        <Text style={welcomeStyle.title}>Chatty</Text>
+        <Text style={welcomeStyle.bottomText}>
+          Share Thoughts To Your Partner
+        </Text>
+        <Text style={welcomeStyle.bottomText}>with music</Text>
+        <Pressable onPress={() => router.push("/register")}>
+          <Text style={welcomeStyle.button}>Start</Text>
+        </Pressable>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 

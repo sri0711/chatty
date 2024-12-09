@@ -5,7 +5,7 @@ const initialState = {
   current_song_details: {
     image:
       "https://cdn.dribbble.com/users/3547568/screenshots/14395014/music_jpeg_4x.jpg",
-    track_name: "<kangal neeyeh>",
+    track_name: "<Not Playing>",
   },
   pause_button_tapped: false,
   isPlaying: false,

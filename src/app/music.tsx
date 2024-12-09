@@ -15,15 +15,14 @@ import { updateList } from "../redux/reducers/playlist";
 import { updateShowPlayer } from "../redux/reducers/appState";
 import { Playlist, State } from "../constants/interfaces";
 
-const Music = ({ modelStates, trackIdState, playingState, toggleState }) => {
+const Music = ({ trackIdState, playingState, toggleState }) => {
   const dispatch = useDispatch();
   const play_list = useSelector((state: State) => state.play_list);
   const appState = useSelector((state: State) => state.chatty_app_state);
   const playerState = useSelector((state: State) => state.player);
 
-  const [modelShow, setModelShow] = modelStates;
   const [trackId, setTrackId] = trackIdState;
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(appState.song_search);
   const [playing, setPlaying] = playingState;
   const [toggle, setToggle] = toggleState;
   useEffect(() => {
