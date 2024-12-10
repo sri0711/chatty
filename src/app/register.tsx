@@ -6,7 +6,7 @@ import {
   TextInput,
   SafeAreaView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import registerStyle from "./styles/registerStyle";
@@ -23,7 +23,7 @@ const register = () => {
 
   const [name, setName] = useState(appState.user_name || "");
   const [roomId, setRoomId] = useState(appState.room_id || "");
-  const [haveRoomIds, setHaveRoomIds] = useState(false);
+  const [haveRoomIds, setHaveRoomIds] = useState(roomId != null ? true : false);
   const getRoomId = () => {
     socket.emit("news", {
       type: "register",
@@ -45,6 +45,12 @@ const register = () => {
     SecureStore.setItem("room_id", roomId);
     SecureStore.setItem("name", name);
     router.replace("/");
+  };
+
+  const shareRoomID = () => {
+    Share.share({
+      message: `Your Partner is waiting for you! \nLove Id: ${roomId}`,
+    });
   };
 
   return (
@@ -99,6 +105,10 @@ const register = () => {
                 keyboardType="default"
               ></TextInput>
             </Text>
+            <Pressable onPress={shareRoomID}>
+              <FontAwesome name="share-alt" size={35} color={"red"} />
+            </Pressable>
+
             <Pressable onPress={mingle}>
               <Text style={registerStyle.button}>Mingle</Text>
             </Pressable>
