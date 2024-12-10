@@ -1,7 +1,7 @@
 export interface State {
   play_list: Playlist[];
   chatty_app_state: AppState;
-  messages: object[];
+  messages: Message[];
   player: Player;
   socket: any;
 }
@@ -11,6 +11,10 @@ interface AppState {
   room_id: string;
   show_player: boolean;
   song_search: string;
+}
+export interface Message {
+  message: string;
+  name: string;
 }
 
 export interface Playlist {

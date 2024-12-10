@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   socket: null,
+  connected: false,
+  joined: false,
 };
 
 const SocketState = createSlice({
@@ -14,8 +16,19 @@ const SocketState = createSlice({
     disconnectSocket: (state) => {
       state.socket = null;
     },
+    updateConnectedState: (state, action) => {
+      state.connected = action.payload;
+    },
+    updateJoinRoomState: (state, action) => {
+      state.joined = action.payload;
+    },
   },
 });
 
-export const { connectSocket, disconnectSocket } = SocketState.actions;
+export const {
+  connectSocket,
+  disconnectSocket,
+  updateConnectedState,
+  updateJoinRoomState,
+} = SocketState.actions;
 export default SocketState.reducer;

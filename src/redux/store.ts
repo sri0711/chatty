@@ -7,7 +7,7 @@ import socketState from "./reducers/socket";
 import devToolsEnhancer from "redux-devtools-expo-dev-plugin";
 
 export const store = configureStore({
-  devTools: false,
+  devTools: true,
   reducer: {
     messages: messagesReducer,
     chatty_app_state: chattyAppState,

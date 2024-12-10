@@ -4,7 +4,7 @@ const initialState: [object] = [
   {
     name: "admin",
     message:
-      "welcome to Chatty (a complete Encrypted Chat). \nwe don't store your any data so offline message is not possible.",
+      "Welcome to Chatty. We don't store your any data so offline message is not possible.",
   },
 ];
 

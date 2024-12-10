@@ -13,7 +13,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { updateList } from "../redux/reducers/playlist";
 import { updateShowPlayer } from "../redux/reducers/appState";
-import { Playlist, State } from "../constants/interfaces";
+import { State } from "../constants/interfaces";
 
 const Music = ({ trackIdState, playingState, toggleState }) => {
   const dispatch = useDispatch();
