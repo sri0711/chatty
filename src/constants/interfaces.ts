@@ -32,6 +32,7 @@ interface Player {
   current_song_details: {
     image: string;
     track_name: string;
+    track_id: string;
   };
   is_playing: boolean;
 }

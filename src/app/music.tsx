@@ -37,117 +37,115 @@ const Music = ({ trackIdState, playingState, toggleState }) => {
       .then((data) => dispatch(updateList(data.data)));
   };
   return (
-    <View>
-      <Modal
-        animationType="slide"
-        visible={appState?.show_player}
-        hardwareAccelerated={true}
-        transparent={true}
+    <Modal
+      animationType="slide"
+      visible={appState?.show_player}
+      hardwareAccelerated={true}
+      transparent={true}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#000",
+        }}
       >
-        <View
+        <Image
+          src={playerState.current_song_details.image}
           style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#000",
+            height: 150,
+            width: 150,
+            borderRadius: 150,
+            padding: 10,
+            margin: 10,
           }}
-        >
-          <Image
-            src={playerState.current_song_details.image}
-            style={{
-              height: 150,
-              width: 150,
-              borderRadius: 150,
-              padding: 10,
-              margin: 10,
-            }}
-          />
-          <Text style={{ color: "#fff", fontSize: 15, marginBottom: 5 }}>
-            {playerState.current_song_details.track_name}
-          </Text>
-          <Pressable
-            onPress={() => {
-              setPlaying(!playing), setToggle(true);
-            }}
-          >
-            <FontAwesome
-              name={playerState.is_playing ? "pause" : "play"}
-              size={25}
-              color={"#FFF"}
-            />
-          </Pressable>
-        </View>
-        <TextInput
-          onChangeText={setInput}
-          placeholder="search song..."
-          placeholderTextColor={"#6EC207"}
-          style={{ color: "#6EC207", fontSize: 25, backgroundColor: "#000" }}
-          keyboardType={"default"}
-          returnKeyLabel={"search"}
-          autoCapitalize={"none"}
-          onSubmitEditing={handleSubmit}
-        >
-          {input}
-        </TextInput>
-        <View
-          style={[
-            {
-              backgroundColor: "rgba(0, 0, 0, 0.7)",
-              padding: 30,
-            },
-          ]}
-        >
-          <FlatList
-            style={{ height: "70%" }}
-            data={play_list}
-            renderItem={({ item }) => (
-              <Pressable
-                onPress={() => setTrackId(item.id)}
-                style={{ flex: 1, flexDirection: "row", marginVertical: 5 }}
-              >
-                <Image
-                  src={item.thumbnail.url}
-                  style={{ height: 80, width: 80 }}
-                />
-                <Text
-                  style={{ color: "#fff", width: "80%", marginHorizontal: 10 }}
-                >
-                  {item.title}
-                </Text>
-              </Pressable>
-            )}
-          ></FlatList>
-        </View>
+        />
+        <Text style={{ color: "#fff", fontSize: 15, marginBottom: 5 }}>
+          {playerState.current_song_details.track_name}
+        </Text>
         <Pressable
           onPress={() => {
-            dispatch(updateShowPlayer());
-          }}
-          style={{
-            position: "absolute",
-            backgroundColor: "#000",
-            bottom: 0,
-            left: 0,
-            width: "100%",
+            setPlaying(!playing), setToggle(true);
           }}
         >
-          <Text
-            style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#000",
-              backgroundColor: "#6EC207",
-              height: 60,
-              fontSize: 30,
-              textAlign: "center",
-              fontWeight: "800",
-            }}
-          >
-            Close
-          </Text>
+          <FontAwesome
+            name={playerState.is_playing ? "pause" : "play"}
+            size={25}
+            color={"#FFF"}
+          />
         </Pressable>
-      </Modal>
-    </View>
+      </View>
+      <TextInput
+        onChangeText={setInput}
+        placeholder="search song..."
+        placeholderTextColor={"#6EC207"}
+        style={{ color: "#6EC207", fontSize: 25, backgroundColor: "#000" }}
+        keyboardType={"default"}
+        returnKeyLabel={"search"}
+        autoCapitalize={"none"}
+        onSubmitEditing={handleSubmit}
+      >
+        {input}
+      </TextInput>
+      <View
+        style={[
+          {
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            padding: 30,
+          },
+        ]}
+      >
+        <FlatList
+          style={{ height: "70%" }}
+          data={play_list}
+          renderItem={({ item }) => (
+            <Pressable
+              onPress={() => setTrackId(item.id)}
+              style={{ flex: 1, flexDirection: "row", marginVertical: 5 }}
+            >
+              <Image
+                src={item.thumbnail.url}
+                style={{ height: 80, width: 80 }}
+              />
+              <Text
+                style={{ color: "#fff", width: "80%", marginHorizontal: 10 }}
+              >
+                {item.title}
+              </Text>
+            </Pressable>
+          )}
+        ></FlatList>
+      </View>
+      <Pressable
+        onPress={() => {
+          dispatch(updateShowPlayer());
+        }}
+        style={{
+          position: "absolute",
+          backgroundColor: "#000",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+        }}
+      >
+        <Text
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#000",
+            backgroundColor: "#6EC207",
+            height: 60,
+            fontSize: 30,
+            textAlign: "center",
+            fontWeight: "800",
+          }}
+        >
+          Close
+        </Text>
+      </Pressable>
+    </Modal>
   );
 };
 

@@ -6,6 +6,7 @@ const initialState = {
     image:
       "https://cdn.dribbble.com/users/3547568/screenshots/14395014/music_jpeg_4x.jpg",
     track_name: "<Not Playing>",
+    track_id: "",
   },
   pause_button_tapped: false,
   isPlaying: false,
@@ -15,20 +16,21 @@ const musicState = createSlice({
   name: "music",
   initialState: initialState,
   reducers: {
-    updateBufferedState: (state) => {
-      state.buffered = !state.buffered;
+    updateBufferedState: (state, action) => {
+      state.buffered = action.payload;
     },
-    updatePauseButtonState: (state) => {
-      state.pause_button_tapped = !state.pause_button_tapped;
+    updatePauseButtonState: (state, action) => {
+      state.pause_button_tapped = action.payload;
     },
     updateSongDetails: (state, action) => {
       state.current_song_details = {
         image: action.payload.image,
         track_name: action.payload.track_name,
+        track_id: action.payload.track_id,
       };
     },
-    updateIsPlaying: (state) => {
-      state.isPlaying = !state.isPlaying;
+    updateIsPlaying: (state, action) => {
+      state.isPlaying = action.payload;
     },
   },
 });
