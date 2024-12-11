@@ -5,8 +5,8 @@ export default StyleSheet.create({
     backgroundColor: "#000",
   },
   body: {
-    minHeight: Dimensions.get("window").height,
-    width: Dimensions.get("window").width,
+    minHeight: Dimensions.get("screen").height,
+    width: Dimensions.get("screen").width,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

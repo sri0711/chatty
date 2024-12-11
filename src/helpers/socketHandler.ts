@@ -3,10 +3,10 @@ import {
   connectSocket,
   disconnectSocket,
   updateConnectedState,
-} from "../redux/reducers/socket";
+} from "@/src/redux/reducers/socket";
 import { io } from "socket.io-client";
 import { useEffect } from "react";
-import config from "./config";
+import config from "@/src/helpers/config";
 
 export default () => {
   const dispatch = useDispatch();

@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { State, Message } from "../constants/interfaces";
+import { State, Message } from "@/src/constants/interfaces";
 import { updateJoinRoomState } from "@/src/redux/reducers/socket";
 import { addMessages } from "@/src/redux/reducers/messages";
-import indexStyle from "./styles/indexStyle";
-import LoadScreen from "./components/loadScreen";
-import MessagesScreen from "./components/messagesScreen";
+import { updateShowPlayer, updateRoomId } from "@/src/redux/reducers/appState";
+import indexStyle from "@/src/app/styles/indexStyle";
+import LoadScreen from "@/src/app/components/loadScreen";
+import MessagesScreen from "@/src/app/components/messagesScreen";
+import Music from "@/src/app/music";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import * as SecureStore from "expo-secure-store";
+import { router } from "expo-router";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -14,6 +19,15 @@ const index = () => {
   const { socket, connected, joined } = useSelector(
     (state: State) => state.socket
   );
+
+  // secValidator
+  useEffect(() => {
+    if (!AppState.room_id) {
+      setTimeout(() => {
+        router.replace("/welcome");
+      }, 500);
+    }
+  });
 
   // socket state event handler
   useEffect(() => {
@@ -46,6 +60,14 @@ const index = () => {
     return () => clearInterval(showCurserTimer);
   });
 
+  useEffect(() => {
+    if (input === "//logout") {
+      SecureStore.deleteItemAsync("room_id");
+      dispatch(updateRoomId(undefined));
+      router.replace("/register");
+    }
+  }, [input]);
+
   const sendMessage = () => {
     socket.emit("news", {
       type: "message",
@@ -74,10 +96,7 @@ const index = () => {
                 <TextInput
                   ref={textInputRef}
                   onFocus={() => setInputFocus(true)}
-                  onBlur={() => {
-                    textInputRef.current?.focus();
-                    setInputFocus(false);
-                  }}
+                  onBlur={() => setInputFocus(false)}
                   style={indexStyle.messageInputText}
                   value={input}
                   onChangeText={setInput}
@@ -89,9 +108,17 @@ const index = () => {
                 />
               </Text>
             </Pressable>
+            <Pressable
+              style={indexStyle.musicButton}
+              onPress={() => dispatch(updateShowPlayer(true))}
+            >
+              <FontAwesome name="headphones" color={"#000"} size={45} />
+            </Pressable>
           </>
         )}
       </View>
+
+      <Music />
     </SafeAreaView>
   );
 };

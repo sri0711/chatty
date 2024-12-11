@@ -1,9 +1,9 @@
 import { Image, Pressable, SafeAreaView, Text, View } from "react-native";
 import React from "react";
 import { router } from "expo-router";
-import welcomeStyle from "./styles/welcomeStyle";
-const appIcon = require("../assets/images/icon.png");
-import { expo as AppDetails } from "../../app.json";
+import welcomeStyle from "@/src/app/styles/welcomeStyle";
+const appIcon = require("@/src/assets/images/icon.png");
+import { expo as AppDetails } from "@/app.json";
 
 const welcome = () => {
   return (
@@ -12,7 +12,7 @@ const welcome = () => {
         <Image source={appIcon} alt="image" style={welcomeStyle.icon} />
         <Text style={welcomeStyle.title}>Chatty</Text>
         <Text style={welcomeStyle.versionText}>
-          Version:{AppDetails.version}
+          Version:{AppDetails?.version}
         </Text>
         <Text style={welcomeStyle.bottomText}>
           Share Thoughts To Your Partner

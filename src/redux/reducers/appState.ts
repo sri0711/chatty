@@ -15,8 +15,8 @@ const chattyAppState = createSlice({
     updateUserName: (state, action) => {
       state.user_name = action.payload;
     },
-    updateShowPlayer: (state) => {
-      state.show_player = !state.show_player;
+    updateShowPlayer: (state, action) => {
+      state.show_player = action.payload;
     },
     updateRoomId: (state, action) => {
       state.room_id = action.payload;

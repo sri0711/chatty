@@ -9,16 +9,16 @@ import Constants from "expo-constants";
 import React, { useEffect } from "react";
 import config from "@/src/helpers/config";
 import { useSelector } from "react-redux";
-const appIcon = require("../../assets/images/icon.png");
-import { State } from "../../constants/interfaces";
+const appIcon = require("@/src/assets/images/icon.png");
+import { State } from "@/src/constants/interfaces";
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    height: Dimensions.get("window").height - Constants.statusBarHeight,
-    width: Dimensions.get("window").width,
+    height: Dimensions.get("screen").height - Constants.statusBarHeight,
+    width: Dimensions.get("screen").width,
   },
   icon: {
     height: 200,
@@ -45,7 +45,7 @@ const LoadScreen = ({ serverHealthState }: any) => {
   return (
     <View style={styles.body}>
       <Image source={appIcon} style={styles.icon} />
-      <ActivityIndicator style={styles.loader} size="large" color="#a6aebf" />
+      <ActivityIndicator style={styles.loader} size="large" color="#6EC207" />
     </View>
   );
 };

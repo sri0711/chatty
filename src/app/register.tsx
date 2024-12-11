@@ -9,12 +9,12 @@ import {
 import React, { useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
-import registerStyle from "./styles/registerStyle";
+import registerStyle from "@/src/app/styles/registerStyle";
 import { useSelector, useDispatch } from "react-redux";
-import { State } from "../constants/interfaces";
+import { State } from "@/src/constants/interfaces";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { updateRoomId, updateUserName } from "../redux/reducers/appState";
-import Utils from "../helpers/Utils";
+import { updateRoomId, updateUserName } from "@/src/redux/reducers/appState";
+import Utils from "@/src/helpers/Utils";
 
 const register = () => {
   const dispatch = useDispatch();

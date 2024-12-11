@@ -1,4 +1,4 @@
-import config from "./config";
+import config from "@/src/helpers/config";
 
 const youtubeUtils = {
   search_song: async (string: String) => {

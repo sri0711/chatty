@@ -2,8 +2,11 @@ import { View, StyleSheet } from "react-native";
 import React from "react";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { useDispatch, useSelector } from "react-redux";
-import { State } from "../constants/interfaces";
-import { updateBufferedState, updateIsPlaying } from "../redux/reducers/player";
+import { State } from "@/src/constants/interfaces";
+import {
+  updateBufferedState,
+  updateIsPlaying,
+} from "@/src/redux/reducers/player";
 
 const styles = StyleSheet.create({
   root: {

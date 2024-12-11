@@ -21,6 +21,7 @@ export interface Playlist {
   id: string;
   thumbnail: thumbnail;
   title: string;
+  duration_formatted: string;
 }
 
 interface thumbnail {

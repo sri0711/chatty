@@ -5,8 +5,8 @@ export default StyleSheet.create({
     backgroundColor: "#000",
   },
   body: {
-    minHeight: Dimensions.get("window").height,
-    width: Dimensions.get("window").width,
+    minHeight: Dimensions.get("screen").height,
+    width: Dimensions.get("screen").width,
     backgroundColor: "#000",
     paddingHorizontal: 5,
   },
@@ -24,5 +24,16 @@ export default StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
+  },
+  musicButton: {
+    backgroundColor: "rgba(109, 192, 7, 0.75)",
+    position: "absolute",
+    top: 40,
+    right: 40,
+    height: 60,
+    width: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
   },
 });

@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import messagesReducer from "./reducers/messages";
-import chattyAppState from "./reducers/appState";
-import playerState from "./reducers/player";
-import playListState from "./reducers/playlist";
-import socketState from "./reducers/socket";
+import messagesReducer from "@/src/redux/reducers/messages";
+import chattyAppState from "@/src/redux/reducers/appState";
+import playerState from "@/src/redux/reducers/player";
+import playListState from "@/src/redux/reducers/playlist";
+import socketState from "@/src/redux/reducers/socket";
 import devToolsEnhancer from "redux-devtools-expo-dev-plugin";
 
 export const store = configureStore({

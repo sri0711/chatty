@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { View, Text, FlatList } from "react-native";
 import { useSelector } from "react-redux";
-import { State } from "../../constants/interfaces";
-import messageStyle from "../styles/messageStyle";
+import { State } from "@/src/constants/interfaces";
+import messageStyle from "@/src/app/styles/messageStyle";
 
 const MessagesScreen = () => {
   const flatListRef = useRef<FlatList | null>(null);
