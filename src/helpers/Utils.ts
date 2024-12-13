@@ -5,7 +5,7 @@ export default {
     if (Platform.OS === "android") {
       ToastAndroid.show(message, ToastAndroid.SHORT);
     } else {
-      Alert.alert("error", message, [{ text: "ok" }]);
+      Alert.alert("error", message, [{ text: "reconnect" }]);
     }
   },
 };

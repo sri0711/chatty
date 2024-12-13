@@ -1,8 +1,9 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { State } from "@/src/constants/interfaces";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Marquee } from "@animatereactnative/marquee";
 
 const styles = StyleSheet.create({
   root: {
@@ -64,21 +65,27 @@ const styles = StyleSheet.create({
 const PlayerInfo = () => {
   const appState = useSelector((state: State) => state.chatty_app_state);
   const playerState = useSelector((state: State) => state.player);
+
   return (
     <View style={styles.root}>
       <Image
         style={styles.albumArt}
         src={playerState?.current_song_details.image}
       />
-      <Text style={styles.trackName}>
-        {playerState?.current_song_details?.track_name}
-      </Text>
+      <Marquee speed={0.5} spacing={50}>
+        <Text style={styles.trackName}>
+          {playerState?.current_song_details?.track_name}
+        </Text>
+      </Marquee>
       <View style={styles.groupButton}>
         <Pressable style={styles.button}>
           <FontAwesome name="backward" style={styles.buttonText} />
         </Pressable>
         <Pressable style={styles.button}>
-          <FontAwesome name="play" style={styles.buttonText} />
+          <FontAwesome
+            name={playerState.is_playing ? "pause" : "play"}
+            style={styles.buttonText}
+          />
         </Pressable>
         <Pressable style={styles.button}>
           <FontAwesome name="forward" style={styles.buttonText} />

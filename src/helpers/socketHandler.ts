@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   connectSocket,
   disconnectSocket,
@@ -7,13 +7,17 @@ import {
 import { io } from "socket.io-client";
 import { useEffect } from "react";
 import config from "@/src/helpers/config";
+import { State } from "@/src/constants/interfaces";
+import Utils from "./Utils";
 
 export default () => {
   const dispatch = useDispatch();
+  const { connected } = useSelector((state: State) => state.socket);
+  const socket = io(config.server_url, {
+    transports: ["websocket"], // You can also specify other transports like 'polling'
+  });
+
   useEffect(() => {
-    const socket = io(config.server_url, {
-      transports: ["websocket"], // You can also specify other transports like 'polling'
-    });
     socket.on("connect", () => {
       dispatch(connectSocket(socket)); // Store the socket instance in Redux
       dispatch(updateConnectedState(true));
@@ -23,11 +27,19 @@ export default () => {
       console.log("Socket disconnected");
       dispatch(disconnectSocket()); // Remove socket instance from Redux
       dispatch(updateConnectedState(false));
+      Utils.showToast("messaging server is disconnected");
     });
 
     socket.on("error", (error) => {
       console.log("Socket error:", error);
     });
   }, []);
+
+  useEffect(() => {
+    if (!connected) {
+      console.log("Socket reconnecting");
+      socket.connect();
+    }
+  }, [connected]);
   return null;
 };

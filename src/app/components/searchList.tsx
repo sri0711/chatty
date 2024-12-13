@@ -10,9 +10,10 @@ import {
 import React, { useEffect, useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
-import { State } from "@/src/constants/interfaces";
+import { Playlist, State } from "@/src/constants/interfaces";
 import youtubeUtils from "@/src/helpers/youtube";
 import { updateList } from "@/src/redux/reducers/playlist";
+import { updateSongDetails } from "@/src/redux/reducers/player";
 
 const styles = StyleSheet.create({
   root: {
@@ -40,10 +41,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     margin: 5,
   },
-  songItem: {
+  listItem: {
     height: 50,
     width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
     marginVertical: 3,
+  },
+  songItem: {
+    width: "90%",
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
@@ -61,6 +68,10 @@ const styles = StyleSheet.create({
   songTitle: {
     color: "#fff",
     fontSize: 15,
+  },
+  options: {
+    color: "#6EC207",
+    fontSize: 25,
   },
 });
 
@@ -81,6 +92,16 @@ const SearchList = () => {
       dispatch(updateList(data.data));
     });
   };
+
+  const playSong = (item: Playlist) => {
+    dispatch(
+      updateSongDetails({
+        image: item.thumbnail.url,
+        track_name: item.title,
+        track_id: item.id,
+      })
+    );
+  };
   return (
     <View style={styles.root}>
       <View style={styles.searchBar}>
@@ -98,16 +119,21 @@ const SearchList = () => {
         style={styles.songLists}
         data={play_list}
         renderItem={({ item }) => (
-          <Pressable style={styles.songItem}>
-            <Image src={item.thumbnail.url} style={styles.songIcon} />
-            <View style={styles.songTitleBlock}>
-              <Text style={styles.songTitle}>
-                {item.title.split("").splice(0, 35).join("")}
-                {item.title.length > 35 ? "..." : ""}
-              </Text>
-              <Text style={styles.songTitle}> {item.duration_formatted}</Text>
-            </View>
-          </Pressable>
+          <View style={styles.listItem}>
+            <Pressable style={styles.songItem} onPress={() => playSong(item)}>
+              <Image src={item.thumbnail.url} style={styles.songIcon} />
+              <View style={styles.songTitleBlock}>
+                <Text style={styles.songTitle}>
+                  {item.title.split("").splice(0, 35).join("")}
+                  {item.title.length > 35 ? "..." : ""}
+                </Text>
+                <Text style={styles.songTitle}> {item.duration_formatted}</Text>
+              </View>
+            </Pressable>
+            <Pressable>
+              <FontAwesome style={styles.options} name="plus" />
+            </Pressable>
+          </View>
         )}
       />
     </View>
