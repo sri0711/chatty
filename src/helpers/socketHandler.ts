@@ -15,6 +15,12 @@ export default () => {
   const { connected } = useSelector((state: State) => state.socket);
   const socket = io(config.server_url, {
     transports: ["websocket"], // You can also specify other transports like 'polling'
+    reconnection: true, // Enable reconnection
+    reconnectionAttempts: Infinity, // Retry until successful
+    reconnectionDelay: 1000, // Initial reconnection delay (1 second)
+    reconnectionDelayMax: 5000, // Maximum delay (5 seconds)
+    randomizationFactor: 0.5, // Randomization factor for reconnection delay
+    timeout: 10000, // Timeout after 10 seconds
   });
 
   useEffect(() => {
