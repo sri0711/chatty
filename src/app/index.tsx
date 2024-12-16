@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
+import {
+  Pressable,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { State, Message } from "@/src/constants/interfaces";
 import { updateJoinRoomState } from "@/src/redux/reducers/socket";
@@ -12,6 +18,8 @@ import Music from "@/src/app/music";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
+import musicHandler from "../helpers/musicHandler";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -37,6 +45,9 @@ const index = () => {
         room_id: AppState.room_id,
       });
       dispatch(updateJoinRoomState(true));
+      socket.on("music", (data: any) => {
+        musicHandler(data, dispatch);
+      });
       socket.on("message", (data: Message) => {
         dispatch(addMessages(data));
       });
@@ -79,47 +90,52 @@ const index = () => {
   };
 
   return (
-    <SafeAreaView style={indexStyle.root}>
-      <View style={indexStyle.body}>
-        {!isServerUp ? (
-          <LoadScreen serverHealthState={[isServerUp, setIsServerUp]} />
-        ) : (
-          <>
-            <MessagesScreen />
-            <Pressable onPress={() => textInputRef?.current?.focus()}>
-              <Text style={indexStyle.userText}>
-                {AppState.user_name}@chatty${"  "}
-                <Text style={indexStyle.messageText}>{input}</Text>
-                <Text style={indexStyle.messageText}>
-                  {showCarrot ? "_" : ""}
+    <SafeAreaProvider>
+      <SafeAreaView style={indexStyle.root}>
+        <View style={indexStyle.body}>
+          {!isServerUp ? (
+            <LoadScreen serverHealthState={[isServerUp, setIsServerUp]} />
+          ) : (
+            <View>
+              <MessagesScreen />
+              <Pressable onPress={() => textInputRef?.current?.focus()}>
+                <Text style={indexStyle.userText}>
+                  {AppState.user_name}@chatty${"  "}
+                  <Text style={indexStyle.messageText}>{input}</Text>
+                  <Text style={indexStyle.messageText}>
+                    {showCarrot ? "_" : ""}
+                  </Text>
+                  <TextInput
+                    ref={textInputRef}
+                    onFocus={() => setInputFocus(true)}
+                    onBlur={() => {
+                      setInputFocus(false);
+                      if (!AppState.show_player) textInputRef?.current?.focus();
+                    }}
+                    style={indexStyle.messageInputText}
+                    value={input}
+                    onChangeText={setInput}
+                    autoFocus={true}
+                    autoCapitalize={"none"}
+                    keyboardType="default"
+                    returnKeyType="send"
+                    onSubmitEditing={sendMessage}
+                  />
                 </Text>
-                <TextInput
-                  ref={textInputRef}
-                  onFocus={() => setInputFocus(true)}
-                  onBlur={() => setInputFocus(false)}
-                  style={indexStyle.messageInputText}
-                  value={input}
-                  onChangeText={setInput}
-                  autoFocus={true}
-                  autoCapitalize={"none"}
-                  keyboardType="default"
-                  returnKeyType="send"
-                  onSubmitEditing={sendMessage}
-                />
-              </Text>
-            </Pressable>
-            <Pressable
-              style={indexStyle.musicButton}
-              onPress={() => dispatch(updateShowPlayer(true))}
-            >
-              <FontAwesome name="headphones" color={"#000"} size={45} />
-            </Pressable>
-          </>
-        )}
-      </View>
+              </Pressable>
+              <TouchableHighlight
+                style={indexStyle.musicButton}
+                onPress={() => dispatch(updateShowPlayer(true))}
+              >
+                <FontAwesome name="headphones" color={"#000"} size={45} />
+              </TouchableHighlight>
+            </View>
+          )}
+        </View>
 
-      <Music />
-    </SafeAreaView>
+        <Music />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

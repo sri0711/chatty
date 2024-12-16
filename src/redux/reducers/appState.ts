@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
 const initialState = {
   user_name: SecureStore.getItem("name") || undefined,
   room_id: SecureStore.getItem("room_id") || undefined,
-  show_player: false,
+  show_player: true,
   song_search: "",
 };
 
@@ -21,9 +21,16 @@ const chattyAppState = createSlice({
     updateRoomId: (state, action) => {
       state.room_id = action.payload;
     },
+    updateSongSearch: (state, action) => {
+      state.song_search = action.payload;
+    },
   },
 });
 
-export const { updateUserName, updateShowPlayer, updateRoomId } =
-  chattyAppState.actions;
+export const {
+  updateUserName,
+  updateShowPlayer,
+  updateRoomId,
+  updateSongSearch,
+} = chattyAppState.actions;
 export default chattyAppState.reducer;

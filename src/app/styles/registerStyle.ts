@@ -39,11 +39,12 @@ export default StyleSheet.create({
   TextField: {
     color: "#fff",
     textAlign: "center",
-    fontSize: 20,
+    fontSize: 15,
     width: 200,
     height: 35,
     borderWidth: 1,
     borderColor: "#fff",
+    padding: 0,
   },
   button: {
     backgroundColor: "#6EC207",

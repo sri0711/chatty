@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Pressable,
-  Share,
-  TextInput,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, Pressable, Share, TextInput } from "react-native";
 import React, { useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
@@ -15,6 +8,7 @@ import { State } from "@/src/constants/interfaces";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { updateRoomId, updateUserName } from "@/src/redux/reducers/appState";
 import Utils from "@/src/helpers/Utils";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const register = () => {
   const dispatch = useDispatch();
@@ -54,48 +48,31 @@ const register = () => {
   };
 
   return (
-    <SafeAreaView style={registerStyle.root}>
-      <View style={registerStyle.body}>
-        <Text style={registerStyle.title}>Register</Text>
-        <Text style={registerStyle.slogan}>❤️ Fill Your Love Form ❤️</Text>
-        <Pressable onPress={() => setHaveRoomIds(!haveRoomIds)}>
-          <Text style={registerStyle.haveLoveId}>
-            Do you have Love ID{" "}
-            <FontAwesome
-              name={haveRoomIds ? "heart" : "heart-o"}
-              color={"red"}
-              size={25}
-            />
-          </Text>
-        </Pressable>
-        <Text style={registerStyle.TextInputTitle}>
-          Lover’s Call :{" "}
-          <TextInput
-            style={registerStyle.TextField}
-            value={name}
-            onChangeText={setName}
-            keyboardType="default"
-          ></TextInput>
-        </Text>
-        {haveRoomIds ? (
+    <SafeAreaProvider>
+      <SafeAreaView style={registerStyle.root}>
+        <View style={registerStyle.body}>
+          <Text style={registerStyle.title}>Register</Text>
+          <Text style={registerStyle.slogan}>❤️ Fill Your Love Form ❤️</Text>
+          <Pressable onPress={() => setHaveRoomIds(!haveRoomIds)}>
+            <Text style={registerStyle.haveLoveId}>
+              Do you have Love ID{" "}
+              <FontAwesome
+                name={haveRoomIds ? "heart" : "heart-o"}
+                color={"red"}
+                size={25}
+              />
+            </Text>
+          </Pressable>
           <Text style={registerStyle.TextInputTitle}>
-            Love Id{"         "}:{" "}
+            Lover’s Call :{" "}
             <TextInput
               style={registerStyle.TextField}
-              value={roomId}
-              onChangeText={setRoomId}
+              value={name}
+              onChangeText={setName}
               keyboardType="default"
             ></TextInput>
           </Text>
-        ) : (
-          <></>
-        )}
-        {haveRoomIds ? (
-          <Pressable onPress={mingle}>
-            <Text style={registerStyle.button}>Mingle</Text>
-          </Pressable>
-        ) : roomId ? (
-          <>
+          {haveRoomIds ? (
             <Text style={registerStyle.TextInputTitle}>
               Love Id{"         "}:{" "}
               <TextInput
@@ -105,23 +82,42 @@ const register = () => {
                 keyboardType="default"
               ></TextInput>
             </Text>
-            <Pressable onPress={shareRoomID}>
-              <FontAwesome name="share-alt" size={35} color={"red"} />
-            </Pressable>
-
+          ) : (
+            <></>
+          )}
+          {haveRoomIds ? (
             <Pressable onPress={mingle}>
               <Text style={registerStyle.button}>Mingle</Text>
             </Pressable>
-          </>
-        ) : (
-          <Pressable onPress={getRoomId}>
-            <Text style={[registerStyle.button, { width: 200 }]}>
-              Get Love Id
-            </Text>
-          </Pressable>
-        )}
-      </View>
-    </SafeAreaView>
+          ) : roomId ? (
+            <>
+              <Text style={registerStyle.TextInputTitle}>
+                Love Id{"         "}:{" "}
+                <TextInput
+                  style={registerStyle.TextField}
+                  value={roomId}
+                  onChangeText={setRoomId}
+                  keyboardType="default"
+                ></TextInput>
+              </Text>
+              <Pressable onPress={shareRoomID}>
+                <FontAwesome name="share-alt" size={35} color={"red"} />
+              </Pressable>
+
+              <Pressable onPress={mingle}>
+                <Text style={registerStyle.button}>Mingle</Text>
+              </Pressable>
+            </>
+          ) : (
+            <Pressable onPress={getRoomId}>
+              <Text style={[registerStyle.button, { width: 200 }]}>
+                Get Love Id
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

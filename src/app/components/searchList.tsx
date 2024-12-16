@@ -79,28 +79,36 @@ const SearchList = () => {
   const dispatch = useDispatch();
   const [input, setInput] = useState("");
   const play_list = useSelector((state: State) => state.play_list);
+  const appState = useSelector((state: State) => state.chatty_app_state);
+  const { socket } = useSelector((state: State) => state.socket);
   useEffect(() => {
     youtubeUtils.search_song("kangal neeyeh").then((data) => {
       dispatch(updateList(data.data));
     });
   }, []);
-  const searchSong = (keyWord: string) => {
-    if (keyWord.length <= 1) {
-      return;
-    }
-    youtubeUtils.search_song(keyWord).then((data) => {
+
+  useEffect(() => {
+    youtubeUtils.search_song(appState.song_search).then((data) => {
       dispatch(updateList(data.data));
     });
-  };
+  }, [appState.song_search]);
 
   const playSong = (item: Playlist) => {
-    dispatch(
-      updateSongDetails({
-        image: item.thumbnail.url,
-        track_name: item.title,
-        track_id: item.id,
-      })
-    );
+    socket.emit("music", {
+      room_id: appState.room_id,
+      track_id: item.id,
+      image: item.thumbnail.url,
+      track_name: item.title,
+      type: "song",
+    });
+  };
+  const searchSong = (keyWord: string) => {
+    if (keyWord.length <= 1) return;
+    socket.emit("music", {
+      room_id: appState.room_id,
+      type: "search_song",
+      search_string: keyWord,
+    });
   };
   return (
     <View style={styles.root}>
