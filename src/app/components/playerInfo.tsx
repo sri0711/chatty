@@ -9,6 +9,7 @@ import { Slider } from "@miblanchard/react-native-slider";
 const PlayerInfo = () => {
   const appState = useSelector((state: State) => state.chatty_app_state);
   const playerState = useSelector((state: State) => state.player);
+  const queueState = useSelector((state: State) => state.queue_list);
   const { socket } = useSelector((state: State) => state.socket);
   const [currentPercentage, setCurrentPercentage] = useState(0);
 
@@ -34,6 +35,31 @@ const PlayerInfo = () => {
   };
 
   const playPause = (action: boolean) => {
+    if (
+      playerState.current_song_details.track_id === "" ||
+      playerState.current_song_details.track_id == null
+    ) {
+      let queueSongs = queueState;
+      if (queueSongs.length >= 1) {
+        let currentSong = queueSongs[0];
+        let data = queueSongs.toSpliced(0, 1);
+
+        socket.emit("music", {
+          room_id: appState.room_id,
+          track_id: currentSong.track_id,
+          image: currentSong.image,
+          track_name: currentSong.track_name,
+          type: "song",
+        });
+        socket.emit("music", {
+          room_id: appState.room_id,
+          type: "queue",
+          action: "updateQueue",
+          queueList: data,
+        });
+      }
+      return;
+    }
     socket.emit("music", {
       room_id: appState.room_id,
       type: "playPause",
@@ -47,6 +73,31 @@ const PlayerInfo = () => {
       room_id: appState.room_id,
       type: "seekTo",
       time: time,
+    });
+  };
+
+  const nextSong = () => {
+    let queueSongs = queueState;
+    if (queueSongs.length === 0) {
+      playerSeek([0 / 0]);
+      playPause(false);
+      return;
+    }
+    let currentSong = queueSongs[0];
+    let data = queueSongs.toSpliced(0, 1);
+
+    socket.emit("music", {
+      room_id: appState.room_id,
+      track_id: currentSong.track_id,
+      image: currentSong.image,
+      track_name: currentSong.track_name,
+      type: "song",
+    });
+    socket.emit("music", {
+      room_id: appState.room_id,
+      type: "queue",
+      action: "updateQueue",
+      queueList: data,
     });
   };
 
@@ -74,7 +125,7 @@ const PlayerInfo = () => {
             style={styles.buttonText}
           />
         </Pressable>
-        <Pressable style={styles.button}>
+        <Pressable style={styles.button} onPress={nextSong}>
           <FontAwesome name="forward" style={styles.buttonText} />
         </Pressable>
       </View>

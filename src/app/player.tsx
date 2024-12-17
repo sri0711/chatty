@@ -29,6 +29,9 @@ enum playerEvents {
 const Player = () => {
   const dispatch = useDispatch();
   const player = useSelector((state: State) => state.player);
+  const appState = useSelector((state: State) => state.chatty_app_state);
+  const queueState = useSelector((state: State) => state.queue_list);
+  const { socket } = useSelector((state: State) => state.socket);
   const playerRef = useRef<YoutubeIframeRef>(null);
 
   useEffect(() => {
@@ -46,7 +49,50 @@ const Player = () => {
     playerRef.current?.seekTo(player.timer.seek_time, true);
   }, [player.timer.seek_time]);
 
+  const playPause = (action: boolean) => {
+    if (
+      player.current_song_details.track_id === "" ||
+      player.current_song_details.track_id == null
+    ) {
+      let queueSongs = queueState;
+      if (queueSongs.length >= 1) {
+        let currentSong = queueSongs[0];
+        let data = queueSongs.toSpliced(0, 1);
+
+        socket.emit("music", {
+          room_id: appState.room_id,
+          track_id: currentSong.track_id,
+          image: currentSong.image,
+          track_name: currentSong.track_name,
+          type: "song",
+        });
+        socket.emit("music", {
+          room_id: appState.room_id,
+          type: "queue",
+          action: "updateQueue",
+          queueList: data,
+        });
+      }
+      return;
+    }
+    socket.emit("music", {
+      room_id: appState.room_id,
+      type: "playPause",
+      action: action,
+    });
+  };
+
+  const playerSeek = (seekedTime: number[]) => {
+    let time = (seekedTime[0] / 100) * player.timer.total_time;
+    socket.emit("music", {
+      room_id: appState.room_id,
+      type: "seekTo",
+      time: time,
+    });
+  };
+
   const onChangeState = (event: playerEvents) => {
+    console.log("🚀 ~ onChangeState ~ event:", event);
     if (event === playerEvents.playing) {
       playerRef.current?.getDuration().then((duration: number) => {
         dispatch(updateTotalTime(duration));
@@ -58,6 +104,31 @@ const Player = () => {
     }
     if (event === playerEvents.unstarted) {
       dispatch(updateIsPlaying(true));
+    }
+    if (event === playerEvents.ended) {
+      if (queueState.length === 0) {
+        playerSeek([0 / 0]);
+        playPause(false);
+        return;
+      } else {
+        let queueSongs = queueState;
+        let currentSong = queueSongs[0];
+        let data = queueSongs.toSpliced(0, 1);
+
+        socket.emit("music", {
+          room_id: appState.room_id,
+          track_id: currentSong.track_id,
+          image: currentSong.image,
+          track_name: currentSong.track_name,
+          type: "song",
+        });
+        socket.emit("music", {
+          room_id: appState.room_id,
+          type: "queue",
+          action: "updateQueue",
+          queueList: data,
+        });
+      }
     }
   };
   return (

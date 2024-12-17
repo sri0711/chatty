@@ -80,6 +80,7 @@ const SearchList = () => {
   const [input, setInput] = useState("");
   const play_list = useSelector((state: State) => state.play_list);
   const appState = useSelector((state: State) => state.chatty_app_state);
+  const queueState = useSelector((state: State) => state.queue_list);
   const { socket } = useSelector((state: State) => state.socket);
   useEffect(() => {
     youtubeUtils.search_song("kangal neeyeh").then((data) => {
@@ -112,6 +113,9 @@ const SearchList = () => {
   };
 
   const addQueue = (item: Playlist) => {
+    if (queueState.find((queue) => queue.track_id === item.id)) {
+      return;
+    }
     socket.emit("music", {
       room_id: appState.room_id,
       track_id: item.id,

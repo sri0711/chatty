@@ -3,7 +3,7 @@ import {
   updateIsPlaying,
   updateSeek,
 } from "@/src/redux/reducers/player";
-import { addSongQueue } from "@/src/redux/reducers/queue";
+import { addSongQueue, updateList } from "@/src/redux/reducers/queue";
 import { updateSongSearch } from "@/src/redux/reducers/appState";
 
 interface SongDetails {
@@ -15,6 +15,7 @@ interface SongDetails {
   search_string: string;
   action: string;
   time: number;
+  queueList: object[];
 }
 export default (data: SongDetails, dispatch: any) => {
   if (data.type === "song") {
@@ -40,13 +41,17 @@ export default (data: SongDetails, dispatch: any) => {
   }
 
   if (data.type === "queue") {
-    console.log(data);
-    dispatch(
-      addSongQueue({
-        image: data.image,
-        track_id: data.track_id,
-        track_name: data.track_name,
-      })
-    );
+    if (data.action === "add") {
+      dispatch(
+        addSongQueue({
+          image: data.image,
+          track_id: data.track_id,
+          track_name: data.track_name,
+        })
+      );
+    }
+    if (data.action === "updateQueue") {
+      dispatch(updateList(data?.queueList));
+    }
   }
 };
