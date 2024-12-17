@@ -41,6 +41,10 @@ const index = () => {
   useEffect(() => {
     if (connected && !joined) {
       socket.emit("news", {
+        type: "leave",
+        room_id: AppState.room_id,
+      });
+      socket.emit("news", {
         type: "join",
         room_id: AppState.room_id,
       });
@@ -52,7 +56,7 @@ const index = () => {
         dispatch(addMessages(data));
       });
     }
-  }, [connected]);
+  }, [connected, socket]);
 
   const [isServerUp, setIsServerUp] = useState(false);
   const [input, setInput] = useState("");
@@ -80,13 +84,17 @@ const index = () => {
   }, [input]);
 
   const sendMessage = () => {
-    socket.emit("news", {
-      type: "message",
-      message: input,
-      room_id: AppState.room_id,
-      name: AppState.user_name,
-    });
-    setInput("");
+    try {
+      socket.emit("news", {
+        type: "message",
+        message: input,
+        room_id: AppState.room_id,
+        name: AppState.user_name,
+      });
+      setInput("");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

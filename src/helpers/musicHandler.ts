@@ -19,7 +19,6 @@ interface SongDetails {
 }
 export default (data: SongDetails, dispatch: any) => {
   if (data.type === "song") {
-    console.log(data);
     dispatch(updateIsPlaying(false));
     dispatch(
       updateSongDetails({

@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
 const initialState = {
   user_name: SecureStore.getItem("name") || undefined,
   room_id: SecureStore.getItem("room_id") || undefined,
-  show_player: true,
+  show_player: false,
   song_search: "",
 };
 

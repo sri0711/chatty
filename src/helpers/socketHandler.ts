@@ -8,7 +8,8 @@ import { io } from "socket.io-client";
 import { useEffect } from "react";
 import config from "@/src/helpers/config";
 import { State } from "@/src/constants/interfaces";
-import Utils from "./Utils";
+import Utils from "@/src/helpers/Utils";
+import { updateJoinRoomState } from "@/src/redux/reducers/socket";
 
 export default () => {
   const dispatch = useDispatch();
@@ -27,12 +28,14 @@ export default () => {
     socket.on("connect", () => {
       dispatch(connectSocket(socket)); // Store the socket instance in Redux
       dispatch(updateConnectedState(true));
+      console.log("Socket Connected");
     });
 
     socket.on("disconnect", () => {
       console.log("Socket disconnected");
       dispatch(disconnectSocket()); // Remove socket instance from Redux
       dispatch(updateConnectedState(false));
+      dispatch(updateJoinRoomState(false));
       Utils.showToast("messaging server is disconnected");
     });
 
