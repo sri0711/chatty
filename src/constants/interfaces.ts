@@ -1,3 +1,5 @@
+import { YoutubeIframeRef } from "react-native-youtube-iframe";
+
 export interface State {
   play_list: Playlist[];
   chatty_app_state: AppState;
@@ -39,5 +41,6 @@ interface Player {
   timer: {
     total_time: number;
     current_time: number;
+    seek_time: number;
   };
 }

@@ -13,6 +13,7 @@ const initialState = {
   timer: {
     total_time: undefined,
     current_time: undefined,
+    seek_time: undefined,
   },
 };
 
@@ -42,6 +43,9 @@ const musicState = createSlice({
     updateCurrentTime: (state, action) => {
       state.timer.current_time = action.payload;
     },
+    updateSeek: (state, action) => {
+      state.timer.seek_time = action.payload;
+    },
   },
 });
 
@@ -52,5 +56,6 @@ export const {
   updateIsPlaying,
   updateTotalTime,
   updateCurrentTime,
+  updateSeek,
 } = musicState.actions;
 export default musicState.reducer;

@@ -42,16 +42,22 @@ const Player = () => {
     return () => clearInterval(updateTimeTrackDelay);
   }, [player.isPlaying]);
 
+  useEffect(() => {
+    playerRef.current?.seekTo(player.timer.seek_time, true);
+  }, [player.timer.seek_time]);
+
   const onChangeState = (event: playerEvents) => {
     if (event === playerEvents.playing) {
       playerRef.current?.getDuration().then((duration: number) => {
         dispatch(updateTotalTime(duration));
       });
       dispatch(updateBufferedState(true));
-      // dispatch(updateIsPlaying(false));
     }
     if (event === playerEvents.paused) {
       dispatch(updateIsPlaying(false));
+    }
+    if (event === playerEvents.unstarted) {
+      dispatch(updateIsPlaying(true));
     }
   };
   return (

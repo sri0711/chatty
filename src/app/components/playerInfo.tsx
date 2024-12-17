@@ -16,7 +16,6 @@ const PlayerInfo = () => {
     if (playerState.isPlaying) {
       let percentage =
         (playerState.timer.current_time / playerState.timer.total_time) * 100;
-      console.log(percentage);
       setCurrentPercentage(Math.round(percentage) || 0);
     }
   }, [playerState.timer.current_time]);
@@ -34,19 +33,20 @@ const PlayerInfo = () => {
     return formattedTime;
   };
 
-  const playPause = () => {
+  const playPause = (action: boolean) => {
     socket.emit("music", {
       room_id: appState.room_id,
       type: "playPause",
-      action: !playerState.isPlaying,
+      action: action,
     });
   };
 
   const playerSeek = (seekedTime: number[]) => {
+    let time = (seekedTime[0] / 100) * playerState.timer.total_time;
     socket.emit("music", {
       room_id: appState.room_id,
       type: "seekTo",
-      time: seekedTime[0],
+      time: time,
     });
   };
 
@@ -62,10 +62,13 @@ const PlayerInfo = () => {
         </Text>
       </Marquee>
       <View style={styles.groupButton}>
-        <Pressable style={styles.button}>
+        <Pressable style={styles.button} onPress={() => playerSeek([0.0])}>
           <FontAwesome name="backward" style={styles.buttonText} />
         </Pressable>
-        <Pressable style={styles.button} onPress={playPause}>
+        <Pressable
+          style={styles.button}
+          onPress={() => playPause(!playerState.isPlaying)}
+        >
           <FontAwesome
             name={playerState.isPlaying ? "pause" : "play"}
             style={styles.buttonText}

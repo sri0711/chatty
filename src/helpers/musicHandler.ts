@@ -1,6 +1,7 @@
 import {
   updateSongDetails,
   updateIsPlaying,
+  updateSeek,
 } from "@/src/redux/reducers/player";
 import { updateSongSearch } from "@/src/redux/reducers/appState";
 
@@ -12,9 +13,12 @@ interface SongDetails {
   track_id: string;
   search_string: string;
   action: string;
+  time: number;
 }
 export default (data: SongDetails, dispatch: any) => {
   if (data.type === "song") {
+    console.log(data);
+    dispatch(updateIsPlaying(false));
     dispatch(
       updateSongDetails({
         image: data.image,
@@ -29,5 +33,8 @@ export default (data: SongDetails, dispatch: any) => {
   }
   if (data.type === "playPause") {
     dispatch(updateIsPlaying(data?.action));
+  }
+  if (data.type === "seekTo") {
+    dispatch(updateSeek(data?.time));
   }
 };
