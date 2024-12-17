@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import SearchList from "@/src/app/components/searchList";
+import QueueList from "./queueList";
 
 const styles = StyleSheet.create({
   root: {
@@ -54,7 +55,7 @@ const SongList = () => {
           </Text>
         </Pressable>
       </View>
-      <SearchList />
+      {showPlaylist ? <SearchList /> : <QueueList />}
     </View>
   );
 };

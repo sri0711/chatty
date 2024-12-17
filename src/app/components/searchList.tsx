@@ -110,6 +110,17 @@ const SearchList = () => {
       search_string: keyWord,
     });
   };
+
+  const addQueue = (item: Playlist) => {
+    socket.emit("music", {
+      room_id: appState.room_id,
+      track_id: item.id,
+      image: item.thumbnail.url,
+      track_name: item.title,
+      type: "queue",
+      action: "add",
+    });
+  };
   return (
     <View style={styles.root}>
       <View style={styles.searchBar}>
@@ -138,7 +149,7 @@ const SearchList = () => {
                 <Text style={styles.songTitle}> {item.duration_formatted}</Text>
               </View>
             </Pressable>
-            <Pressable>
+            <Pressable onPress={() => addQueue(item)}>
               <FontAwesome style={styles.options} name="plus" />
             </Pressable>
           </View>

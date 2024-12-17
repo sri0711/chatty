@@ -4,6 +4,7 @@ import chattyAppState from "@/src/redux/reducers/appState";
 import playerState from "@/src/redux/reducers/player";
 import playListState from "@/src/redux/reducers/playlist";
 import socketState from "@/src/redux/reducers/socket";
+import queueState from "@/src/redux/reducers/queue";
 import devToolsEnhancer from "redux-devtools-expo-dev-plugin";
 
 export const store = configureStore({
@@ -12,6 +13,7 @@ export const store = configureStore({
     messages: messagesReducer,
     chatty_app_state: chattyAppState,
     player: playerState,
+    queue_list: queueState,
     play_list: playListState,
     socket: socketState,
   },

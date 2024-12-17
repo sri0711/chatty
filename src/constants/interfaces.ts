@@ -6,6 +6,7 @@ export interface State {
   messages: Message[];
   player: Player;
   socket: any;
+  queue_list: Queue[];
 }
 
 interface AppState {
@@ -43,4 +44,10 @@ interface Player {
     current_time: number;
     seek_time: number;
   };
+}
+
+export interface Queue {
+  track_name: string;
+  image: string;
+  track_id: string;
 }
