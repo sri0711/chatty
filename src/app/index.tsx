@@ -85,6 +85,9 @@ const index = () => {
 
   const sendMessage = () => {
     try {
+      if (!connected || !joined) {
+        return;
+      }
       socket.emit("news", {
         type: "message",
         message: input,
