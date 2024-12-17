@@ -35,5 +35,9 @@ interface Player {
     track_name: string;
     track_id: string;
   };
-  is_playing: boolean;
+  isPlaying: boolean;
+  timer: {
+    total_time: number;
+    current_time: number;
+  };
 }

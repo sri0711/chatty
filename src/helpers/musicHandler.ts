@@ -11,10 +11,10 @@ interface SongDetails {
   track_name: string;
   track_id: string;
   search_string: string;
+  action: string;
 }
 export default (data: SongDetails, dispatch: any) => {
   if (data.type === "song") {
-    dispatch(updateIsPlaying(true));
     dispatch(
       updateSongDetails({
         image: data.image,
@@ -22,8 +22,12 @@ export default (data: SongDetails, dispatch: any) => {
         track_id: data.track_id,
       })
     );
+    dispatch(updateIsPlaying(true));
   }
   if (data.type === "search_song") {
     dispatch(updateSongSearch(data.search_string));
+  }
+  if (data.type === "playPause") {
+    dispatch(updateIsPlaying(data?.action));
   }
 };

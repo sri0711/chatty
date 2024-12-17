@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {
   buffered: false,
@@ -10,6 +10,10 @@ const initialState = {
   },
   pause_button_tapped: false,
   isPlaying: false,
+  timer: {
+    total_time: undefined,
+    current_time: undefined,
+  },
 };
 
 const musicState = createSlice({
@@ -32,6 +36,12 @@ const musicState = createSlice({
     updateIsPlaying: (state, action) => {
       state.isPlaying = action.payload;
     },
+    updateTotalTime: (state, action) => {
+      state.timer.total_time = action.payload;
+    },
+    updateCurrentTime: (state, action) => {
+      state.timer.current_time = action.payload;
+    },
   },
 });
 
@@ -40,5 +50,7 @@ export const {
   updateSongDetails,
   updatePauseButtonState,
   updateIsPlaying,
+  updateTotalTime,
+  updateCurrentTime,
 } = musicState.actions;
 export default musicState.reducer;

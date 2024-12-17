@@ -1,11 +1,13 @@
 import { View, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
-import YoutubePlayer from "react-native-youtube-iframe";
+import React, { useEffect, useRef, useState } from "react";
+import YoutubePlayer, { YoutubeIframeRef } from "react-native-youtube-iframe";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "@/src/constants/interfaces";
 import {
   updateBufferedState,
   updateIsPlaying,
+  updateTotalTime,
+  updateCurrentTime,
 } from "@/src/redux/reducers/player";
 
 const styles = StyleSheet.create({
@@ -27,28 +29,38 @@ enum playerEvents {
 const Player = () => {
   const dispatch = useDispatch();
   const player = useSelector((state: State) => state.player);
+  const playerRef = useRef<YoutubeIframeRef>(null);
 
-  useEffect(() => {}, [player.is_playing]);
+  useEffect(() => {
+    let updateTimeTrackDelay = setInterval(() => {
+      if (player.isPlaying) {
+        playerRef.current?.getCurrentTime().then((duration: number) => {
+          dispatch(updateCurrentTime(duration));
+        });
+      }
+    }, 500);
+    return () => clearInterval(updateTimeTrackDelay);
+  }, [player.isPlaying]);
 
   const onChangeState = (event: playerEvents) => {
-    console.log("🚀 ~ onChangeState ~ event:", event);
     if (event === playerEvents.playing) {
+      playerRef.current?.getDuration().then((duration: number) => {
+        dispatch(updateTotalTime(duration));
+      });
       dispatch(updateBufferedState(true));
-      dispatch(updateIsPlaying(false));
+      // dispatch(updateIsPlaying(false));
     }
-    if (event === playerEvents.video_cued) {
+    if (event === playerEvents.paused) {
       dispatch(updateIsPlaying(false));
-      setTimeout(() => {
-        dispatch(updateIsPlaying(true));
-      }, 1000);
     }
   };
   return (
     <View style={styles.root}>
       <YoutubePlayer
+        ref={playerRef}
         height={0}
         width={0}
-        play={true}
+        play={player.isPlaying}
         videoId={player.current_song_details.track_id}
         onChangeState={(event: any) => onChangeState(event)}
       />

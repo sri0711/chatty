@@ -18,7 +18,7 @@ import Music from "@/src/app/music";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
-import musicHandler from "../helpers/musicHandler";
+import musicHandler from "@/src/helpers/musicHandler";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const index = () => {
