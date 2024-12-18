@@ -2,14 +2,17 @@
   "expo": {
     "name": "chatty",
     "slug": "chatty",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "audio": {
+        "backgroundMode": "playback"
+      }
     },
     "android": {
       "adaptiveIcon": {
