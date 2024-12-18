@@ -92,7 +92,6 @@ const Player = () => {
   };
 
   const onChangeState = (event: playerEvents) => {
-    console.log("🚀 ~ onChangeState ~ event:", event);
     if (event === playerEvents.playing) {
       playerRef.current?.getDuration().then((duration: number) => {
         dispatch(updateTotalTime(duration));

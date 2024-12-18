@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  KeyboardAvoidingView,
   Pressable,
   Text,
   TextInput,
@@ -83,7 +84,8 @@ const index = () => {
     }
   }, [input]);
 
-  const sendMessage = () => {
+  const sendMessage = (e: any) => {
+    e.preventDefault();
     try {
       if (!connected || !joined) {
         return;
@@ -109,7 +111,12 @@ const index = () => {
           ) : (
             <View>
               <MessagesScreen />
-              <Pressable onPress={() => textInputRef?.current?.focus()}>
+              <Pressable
+                onPress={() => {
+                  textInputRef?.current?.blur();
+                  textInputRef?.current?.focus();
+                }}
+              >
                 <Text style={indexStyle.userText}>
                   {AppState.user_name}@chatty${"  "}
                   <Text style={indexStyle.messageText}>{input}</Text>
@@ -119,18 +126,17 @@ const index = () => {
                   <TextInput
                     ref={textInputRef}
                     onFocus={() => setInputFocus(true)}
-                    onBlur={() => {
-                      setInputFocus(false);
-                      if (!AppState.show_player) textInputRef?.current?.focus();
-                    }}
+                    onBlur={() => setInputFocus(false)}
                     style={indexStyle.messageInputText}
                     value={input}
                     onChangeText={setInput}
-                    autoFocus={true}
                     autoCapitalize={"none"}
                     keyboardType="default"
                     returnKeyType="send"
-                    onSubmitEditing={sendMessage}
+                    onSubmitEditing={(e: any) => sendMessage(e)}
+                    autoFocus={true}
+                    autoCorrect={false}
+                    blurOnSubmit={false}
                   />
                 </Text>
               </Pressable>

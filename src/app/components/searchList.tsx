@@ -92,6 +92,7 @@ const SearchList = () => {
     youtubeUtils.search_song(appState.song_search).then((data) => {
       dispatch(updateList(data.data));
     });
+    setInput(appState.song_search);
   }, [appState.song_search]);
 
   const playSong = (item: Playlist) => {
@@ -154,7 +155,14 @@ const SearchList = () => {
               </View>
             </Pressable>
             <Pressable onPress={() => addQueue(item)}>
-              <FontAwesome style={styles.options} name="plus" />
+              <FontAwesome
+                style={styles.options}
+                name={
+                  !queueState.find((queue) => queue.track_id === item.id)
+                    ? "plus"
+                    : "check"
+                }
+              />
             </Pressable>
           </View>
         )}

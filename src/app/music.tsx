@@ -18,6 +18,7 @@ const Music = ({}) => {
           animationType="slide"
           visible={appState.show_player}
           transparent={true}
+          style={musicStyle.root}
         >
           <PlayerInfo />
           <SongList />

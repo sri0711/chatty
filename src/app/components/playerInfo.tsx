@@ -68,12 +68,16 @@ const PlayerInfo = () => {
   };
 
   const playerSeek = (seekedTime: number[]) => {
-    let time = (seekedTime[0] / 100) * playerState.timer.total_time;
-    socket.emit("music", {
-      room_id: appState.room_id,
-      type: "seekTo",
-      time: time,
-    });
+    try {
+      let time = (seekedTime[0] / 100) * playerState.timer.total_time;
+      socket.emit("music", {
+        room_id: appState.room_id,
+        type: "seekTo",
+        time: time,
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const nextSong = () => {
