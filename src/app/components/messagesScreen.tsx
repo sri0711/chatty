@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { View, Text, FlatList, Animated } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { State } from "@/src/constants/interfaces";
 import messageStyle from "@/src/app/styles/messageStyle";
 import { PanGestureHandler } from "react-native-gesture-handler";
+import { updateReplyMessage } from "@/src/redux/reducers/appState";
 
 const MessagesScreen = () => {
+  const dispatch = useDispatch();
   const flatListRef = useRef<FlatList | null>(null);
   const messages = useSelector((state: State) => state.messages);
   useEffect(() => {
@@ -37,7 +39,7 @@ const MessagesScreen = () => {
     if (state === 5) {
       // Gesture ended
       if (translationX > 100) {
-        console.log("Replying to message:", data);
+        dispatch(updateReplyMessage(data));
       }
 
       // Reset position after swipe action
@@ -73,6 +75,16 @@ const MessagesScreen = () => {
                     ],
                   }}
                 >
+                  {item?.reply_message?.message_id ? (
+                    <Text style={messageStyle.replyMessageText}>
+                      <Text style={messageStyle.userText}>
+                        {"  "}- Reply~{item?.reply_message?.message_from}@chatty
+                      </Text>{" "}
+                      {item?.reply_message?.message}
+                    </Text>
+                  ) : (
+                    <></>
+                  )}
                   <Text style={messageStyle.messageText}>
                     <Text style={messageStyle.userText}>
                       {item.name}@chatty${" "}

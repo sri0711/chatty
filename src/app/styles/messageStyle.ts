@@ -9,6 +9,12 @@ export default StyleSheet.create({
     color: "#fff",
     fontSize: 18,
   },
+  replyMessageText: {
+    color: "#fff",
+    fontSize: 18,
+    backgroundColor: "rgba(166, 174, 191, 0.2)",
+    padding: 5,
+  },
   flatList: {
     maxHeight: Dimensions.get("screen").height - 120,
   },

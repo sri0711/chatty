@@ -6,6 +6,11 @@ const initialState = {
   room_id: SecureStore.getItem("room_id") || undefined,
   show_player: false,
   song_search: "",
+  reply_message: {
+    message: undefined,
+    message_id: undefined,
+    message_from: undefined,
+  },
 };
 
 const chattyAppState = createSlice({
@@ -24,6 +29,20 @@ const chattyAppState = createSlice({
     updateSongSearch: (state, action) => {
       state.song_search = action.payload;
     },
+    updateReplyMessage: (state, action) => {
+      state.reply_message = {
+        message: action?.payload?.message,
+        message_from: action?.payload?.name,
+        message_id: action?.payload?.unique_id,
+      };
+    },
+    clearReplyMessage: (state) => {
+      state.reply_message = {
+        message: undefined,
+        message_id: undefined,
+        message_from: undefined,
+      };
+    },
   },
 });
 
@@ -32,5 +51,7 @@ export const {
   updateShowPlayer,
   updateRoomId,
   updateSongSearch,
+  updateReplyMessage,
+  clearReplyMessage,
 } = chattyAppState.actions;
 export default chattyAppState.reducer;
