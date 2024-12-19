@@ -36,4 +36,10 @@ export default StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
   },
+  replyMessageRoot: {
+    backgroundColor: "rgba(166, 174, 191, 0.3)",
+    color: "#6EC207",
+    padding: 5,
+    fontSize: 20,
+  },
 });

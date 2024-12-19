@@ -14,6 +14,11 @@ interface AppState {
   room_id: string;
   show_player: boolean;
   song_search: string;
+  reply_message: {
+    message: string;
+    message_id: string;
+    message_from: string;
+  };
 }
 export interface Message {
   message: string;

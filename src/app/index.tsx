@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  KeyboardAvoidingView,
   Pressable,
   Text,
   TextInput,
@@ -11,7 +10,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { State, Message } from "@/src/constants/interfaces";
 import { updateJoinRoomState } from "@/src/redux/reducers/socket";
 import { addMessages } from "@/src/redux/reducers/messages";
-import { updateShowPlayer, updateRoomId } from "@/src/redux/reducers/appState";
+import {
+  updateShowPlayer,
+  updateRoomId,
+  clearReplyMessage,
+} from "@/src/redux/reducers/appState";
 import indexStyle from "@/src/app/styles/indexStyle";
 import LoadScreen from "@/src/app/components/loadScreen";
 import MessagesScreen from "@/src/app/components/messagesScreen";
@@ -21,6 +24,7 @@ import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import musicHandler from "@/src/helpers/musicHandler";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { TapGestureHandler } from "react-native-gesture-handler";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -90,15 +94,26 @@ const index = () => {
       if (!connected || !joined) {
         return;
       }
+      let reply = AppState.reply_message.message_id
+        ? AppState.reply_message
+        : undefined;
       socket.emit("news", {
         type: "message",
         message: input,
         room_id: AppState.room_id,
         name: AppState.user_name,
+        reply_message: reply,
       });
+      if (reply) dispatch(clearReplyMessage());
       setInput("");
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const tap = (event: any) => {
+    if (event.nativeEvent.state === 4) {
+      dispatch(clearReplyMessage());
     }
   };
 
@@ -117,6 +132,22 @@ const index = () => {
                   textInputRef?.current?.focus();
                 }}
               >
+                {AppState.reply_message.message_id != null &&
+                AppState.reply_message.message_id !== "" ? (
+                  <TapGestureHandler
+                    onHandlerStateChange={tap}
+                    numberOfTaps={2}
+                  >
+                    <Text style={indexStyle.replyMessageRoot}>
+                      {AppState.reply_message.message_from}@chatty${" "}
+                      <Text style={indexStyle.messageText}>
+                        {AppState.reply_message.message}
+                      </Text>
+                    </Text>
+                  </TapGestureHandler>
+                ) : (
+                  <View></View>
+                )}
                 <Text style={indexStyle.userText}>
                   {AppState.user_name}@chatty${"  "}
                   <Text style={indexStyle.messageText}>{input}</Text>
